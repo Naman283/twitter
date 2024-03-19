@@ -1,3 +1,918 @@
+<?php
+
+session_start();
+
+
+
+require_once("classes\dbConfig.php");
+
+
+
+if(isset($_GET["page"]) && $_GET["page"] == 'login')
+
+{
+
+    include_once 'controller\login.php';
+
+
+
+} elseif(isset($_GET["page"]) && $_GET["page"] == 'signup') {
+
+
+
+    include_once 'controller\signup.php';
+
+
+
+} elseif(isset($_GET["page"]) && $_GET["page"] == 'signupValidation') {
+
+    
+
+    include_once 'controller\signupValidation.php';
+
+
+
+} elseif(isset($_GET["page"]) && $_GET["page"] == 'loginValidation') {
+
+    
+
+    include_once 'controller\loginValidation.php';
+
+
+
+} elseif(isset($_GET["page"]) && $_GET["page"] == 'dashboard') {
+
+
+
+    include_once 'controller\dashboard.php';
+
+
+
+} elseif(isset($_GET["page"]) && $_GET["page"] == 'profile') {
+
+
+
+    include_once 'controller\profile.php';
+
+
+
+} elseif(isset($_GET["page"]) && $_GET["page"] == 'logout') {
+
+
+
+    include_once 'controller\logout.php';
+
+
+
+} elseif(isset($_GET["page"]) && $_GET["page"] == 'editProfile') {
+
+
+
+    include_once 'controller\editProfile.php';
+
+
+
+} elseif(isset($_GET["page"]) && $_GET["page"] == 'editProfileValidation') {
+
+
+
+    include_once 'controller\editProfileValidation.php';
+
+
+
+} elseif(isset($_GET["page"]) && $_GET["page"] == 'updatePassword') {
+
+
+
+    include_once 'controller\updatePassword.php';
+
+
+
+} elseif(isset($_GET["page"]) && $_GET["page"] == 'updatePasswordValidation') {
+
+
+
+    include_once 'controller\updatePasswordValidation.php';
+
+
+
+} elseif(isset($_POST["page"]) && $_POST["page"] == 'posttweet') {
+
+
+
+    include_once 'controller\posttweet.php';
+
+
+
+}  elseif(isset($_POST["page"]) && $_POST["page"] == 'like') {
+
+
+
+    include_once 'controller\like.php';
+
+
+
+}  elseif(isset($_POST["page"]) && $_POST["page"] == 'delete_tweet') {
+
+
+
+    include_once 'controller\delete_tweet.php';
+
+
+
+} else {
+
+    if(isset( $_SESSION["user_id"]) &&  $_SESSION["user_id"]){
+
+        include_once 'controller\dashboard.php';
+
+    } else {
+
+        include_once 'controller\login.php';
+
+    }
+
+   
+
+}
+,.............<?php 
+
+    $db = mysqli_connect("localhost", "root", "", "twitter") or die("Connectivity Failed");
+
+?>
+
+...........<?php
+
+
+
+if (!isset($_SESSION["user_id"]) ||  !$_SESSION["user_id"]) {
+
+    // remove all session variables
+
+    session_unset();
+
+    session_destroy();
+
+    header('Location: index.php?page=login&err=8');
+
+}
+
+
+
+?>
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <title>Twitter</title>
+
+    <link rel="stylesheet" href="views\css\global.css" />
+
+    <link rel="stylesheet" href="views\css\happening.css" />
+
+    <link rel="stylesheet" href="views\css\layout.css" />
+
+    <link rel="stylesheet" href="views\css\brand.css" />
+
+    <link rel="stylesheet" href="views\css\sidebar-menu.css" />
+
+    <link rel="stylesheet" href="views\css\tweet.css" />
+
+    <link rel="stylesheet" href="views\css\trends-for-you.css" />
+
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v3.0.6/css/line.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+</head>
+
+
+
+<body>
+
+    <nav class="navbar fixed-top">
+
+        <div class="navbar-brand">
+
+            <a href="?page=dashboard"><img src="https://static.dezeen.com/uploads/2012/06/dezeen_twitter-bird.gif" alt="Logo"></a>
+
+        </div>
+
+        <div class="foryou">
+
+            For You
+
+        </div>
+
+        <form class="d-flex search">
+
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+
+            <button class="btn btn-primary search1" type="submit">Search</button>
+
+        </form>
+
+    </nav>
+
+    <section class="landing">
+
+        <div class="layout">
+
+            <div class="layout__left-sidebar">
+
+                <div class="sidebar-menu">
+
+                    <a href="#">
+
+                        <div class="sidebar-menu__item sidebar-menu__item--active">
+
+                            <img src="views\img\home.svg" class="sidebar-menu__item-icon" />
+
+                            HOME
+
+                        </div>
+
+                    </a>
+
+
+
+                    <a href="?page=profile">
+
+                        <div class="sidebar-menu__item" >
+
+                            <img src="views\img\profile.svg" class="sidebar-menu__item-icon" />
+
+                            Profile
+
+                        </div>
+
+                    </a>
+
+
+
+                    <a href="?page=logout">
+
+                        <div class="sidebar-menu__item">
+
+                            <img class="sidebar-menu__item-icon" />
+
+                            <a href="?page=logout">Log out</a>
+
+                        </div>
+
+                    </a>
+
+
+
+                </div>
+
+            </div>
+
+            <div class="layout__main">
+
+                <?php
+
+                $userId = (int)$_SESSION["user_id"];
+
+
+
+                $query = "SELECT * FROM users WHERE `id` =" . (int)$userId;
+
+
+
+                $resultData = mysqli_query($db, $query) or die(mysqli_error($db));
+
+
+
+                if ((mysqli_num_rows($resultData) > 0)) {
+
+                    $userData = $resultData->fetch_assoc();
+
+                    $name = $userData['username'];
+
+                    $email = $userData['mail'];
+
+                    $bio = $userData['bio'];
+
+                    $address = $userData['address'];
+
+                    $documentRoot = $_SERVER['DOCUMENT_ROOT'];
+
+                    $projectDirectory = "/TwitterAssignment";
+
+                    $uploadDirRelative = "/views/img/uploads/";
+
+                    $uploadDir = $projectDirectory . $uploadDirRelative;
+
+                    $uniqueFileName = $userData['filename'];
+
+                    $uploadPath = $uploadDir . $uniqueFileName;
+
+                    $fileExist = $documentRoot . $uploadPath;
+
+                }
+
+                ?>
+
+                <div class="wrapper">
+
+                    <div>
+
+                        <div class="input-box">
+
+                            <div class="avatar">
+
+                                <img src="<?php echo (file_exists($fileExist) && isset($uniqueFileName) && ($uniqueFileName)) ? $uploadPath : 'views/img/addImage.jpg'; ?>" alt="profile" class="tweet__author-logo">
+
+                            </div>
+
+                            <input type="hidden" id="userId" value="<?php echo $userId ?>">
+
+                            <div class="post-box">
+
+                                <textarea class="post-tweet" type="text" name="tweetText" id="tweetTextId" placeholder="What's happening..."></textarea>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="wrapper2">
+
+                        <div class="up_icon">
+
+                            <!-- Image Upload -->
+
+                            <i class="fa-regular fa-image img1" id="postImgId">
+
+                                <div class="text-center">
+
+                                    <input type="file" name="tweetImage" id="tweetImageFileInput" style="display: none;">
+
+                                </div>
+
+                            </i>
+
+                            <!-- Video Upload -->
+
+                            <i class="fa-solid fa-video vid2" id="postVideoId">
+
+                                <div class="text-center">
+
+                                    <input type="file" name="tweetVideo" id="tweetVideoFileInput" style="display: none;">
+
+                                </div>
+
+                            </i>
+
+                        </div>
+
+
+
+                        <!-- Image Preview -->
+
+                        <div class="container text-center m-2 mb-5" id="imagePreviewDivId" style="display: none;">
+
+                            <img src="" id="postImgPreviewId" style="display: none; width:100%!important;">
+
+                        </div>
+
+
+
+                        <!-- Video Preview -->
+
+                        <div class="container text-center m-2 mb-5" id="videoPreviewDivId" style="display: none;">
+
+                            <video controls id="postVideoPreviewId" style="display: none; width:100%!important;">
+
+                                Your browser does not support the video tag.
+
+                            </video>
+
+                        </div>
+
+
+
+                        <button id="postBtnId" type="button" class="btn btn-primary postbtn" style="background-color: #1da1f2">POST</button>
+
+                    </div>
+
+                </div>
+
+                <?php
+
+                $query = "SELECT * FROM posts ORDER BY id DESC";
+
+                $postData = mysqli_query($db, $query) or die(mysqli_error($db));
+
+                if ((mysqli_num_rows($postData) > 0)) {
+
+                    $allPosts = mysqli_fetch_all($postData, MYSQLI_ASSOC);
+
+                    if (isset($allPosts) && $allPosts) {
+
+                        foreach ($allPosts as $post) {
+
+
+
+                            $query = "SELECT * FROM users WHERE `id` =" . (int)$post['iduser'];
+
+
+
+                            $resultData = mysqli_query($db, $query) or die(mysqli_error($db));
+
+
+
+                            $userData = $resultData->fetch_assoc();
+
+
+
+                            $documentRoot = $_SERVER['DOCUMENT_ROOT'];
+
+                            $projectDirectory = "/TwitterAssignment";
+
+                            $uploadDirRelative = "/views/img/uploads/";
+
+                            $uploadDir = $projectDirectory . $uploadDirRelative;
+
+                            $uniqueFileName = $userData['filename'];
+
+                            $uploadPath = $uploadDir . $uniqueFileName;
+
+                            $fileExist = $documentRoot . $uploadPath;
+
+
+
+                            $postFileName = $post['imagename'];
+
+                            $uploadPostPath = $uploadDir . $postFileName;
+
+                            $filePostExist = $documentRoot . $uploadPostPath;
+
+
+
+                            $postVideoFileName = $post['videoname'];
+
+                            $uploadPostVideoPath = $uploadDir . $postVideoFileName;
+
+                            $filePostVideoExist = $documentRoot . $uploadPostPath;
+
+                ?>
+
+                            <div class="allTweets">
+
+                                <div>
+
+                                    <img src="<?php echo (file_exists($fileExist) && isset($uniqueFileName) && ($uniqueFileName)) ? $uploadPath : 'views/img/addImage.jpg'; ?>" alt="profile" class="tweet__author-logo">
+
+                                    <span style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 18px; font-weight: bold; color: #1da1f2"><?php echo $userData['username']; ?></span>
+
+                                </div>
+
+                                <p style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 17px" class="tweetTextDiv"><?php echo $post['text']; ?></p>
+
+                                <div class="container">
+
+                                    <?php
+
+                                    if (file_exists($filePostExist) && isset($postFileName) && ($postFileName)) {
+
+                                    ?>
+
+                                        <img src="<?php echo (file_exists($filePostExist) && isset($postFileName) && ($postFileName)) ?
+
+                                                        $uploadPostPath : 'views/img/addImage.jpg'; ?>" style="width:100%!important;">
+
+                                    <?php
+
+                                    }
+
+                                    ?>
+
+                                    <?php
+
+                                    if (file_exists($filePostVideoExist) && isset($postVideoFileName) && ($postVideoFileName)) {
+
+                                    ?>
+
+                                        <video controls src="<?php echo (file_exists($filePostVideoExist) && isset($postVideoFileName) && ($postVideoFileName)) ?
+
+                                                                    $uploadPostVideoPath : 'views/img/addImage.jpg'; ?>" style="width:100%!important;">
+
+                                        </video>
+
+                                    <?php
+
+                                    }
+
+                                    ?>
+
+                                    <button class="btn btn-light likeButton <?php echo in_array($userId, explode(',', $post['likebyusers'])) ? 'liked' : ''; ?>" data-post-id="<?php echo $post['id'] ?>" data-user-id="<?php echo $userId ?>">
+
+                                        <i class="fas fa-heart"></i>
+
+                                        <span class="likeCount"><?php echo $post['like_count'] ?></span> Likes
+
+                                    </button>
+
+                                    <!-- Delete Button -->
+
+                                    <?php if ($post['iduser'] == $userId) { ?>
+
+                                        <button class="btn btn-light deleteButton" data-post-id="<?php echo $post['id']; ?>">
+
+                                            <i class="fas fa-trash"></i>
+
+                                            Delete
+
+                                        </button>
+
+                                    <?php } ?>
+
+
+
+                                </div>
+
+
+
+                            </div>
+
+                <?php
+
+                        }
+
+                    }
+
+                }
+
+                ?>
+
+            </div>
+
+            <div class="layout__right-sidebar-container">
+
+                <div class="layout__right-sidebar">
+
+                    <div class="trends-for-you" style="width: 177%!important;">
+
+                        <div class="trends-for-you__block">
+
+                            <div class="trends-for-you__heading">
+
+                                Trends for you
+
+                            </div>
+
+                        </div>
+
+                        <div class="trends-for-you__block">
+
+                            <div class="trends-for-you__meta-information">
+
+                                Trending in India
+
+                            </div>
+
+                            <div class="trends-for-you__trend-name">
+
+                                #kisan_andolan
+
+                            </div>
+
+                            <div class="trends-for-you__meta-information">
+
+                                155k Tweets
+
+                            </div>
+
+                            <div class="trends-for-you__trend-name">
+
+                                #jobs
+
+                            </div>
+
+                            <div class="trends-for-you__meta-information">
+
+                                120k Tweets
+
+                            </div>
+
+                            <div class="trends-for-you__trend-name">
+
+                                #cricket
+
+                            </div>
+
+                            <div class="trends-for-you__meta-information">
+
+                                175k Tweets
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script src="views\js\dashboard.js"></script>
+
+    <script>
+
+
+
+    </script>
+
+
+
+</body>
+
+
+
+</html>
+
+.............
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="views\css\login.css">
+</head>
+
+<body>
+    <div>
+        <?php
+        if (isset($_GET['err']) && $_GET['err'] == '1') {
+        ?>
+            <div class="alert alert-danger" role="alert">
+                All fields are required.
+            </div>
+        <?php
+        } else if (isset($_GET['err']) && $_GET['err'] == '2') {
+        ?>
+            <div class="alert alert-danger" role="alert">
+                All fields are required.
+            </div>
+        <?php
+        } else if (isset($_GET['err']) && $_GET['err'] == '3') {
+        ?>
+            <div class="alert alert-danger" role="alert">
+                Please enter email.
+            </div>
+        <?php
+        } else if (isset($_GET['err']) && $_GET['err'] == '4') {
+        ?>
+            <div class="alert alert-danger" role="alert">
+                Please enter password.
+            </div>
+        <?php
+        } else if (isset($_GET['err']) && $_GET['err'] == '5') {
+        ?>
+            <div class="alert alert-danger" role="alert">
+                Please enter a valid email.
+            <?php
+        } else if (isset($_GET['err']) && $_GET['err'] == '6') {
+            ?>
+                <div class="alert alert-danger" role="alert">
+                    Please enter a valid password.
+                </div>
+            <?php
+        } else if (isset($_GET['err']) && $_GET['err'] == '7') {
+            ?>
+                <div class="alert alert-danger" role="alert">
+                    Invalid credentials.
+                </div>
+            <?php
+        } else if (isset($_GET['err']) && $_GET['err'] == '8') {
+            ?>
+                <div class="alert alert-info" role="alert">
+                    Please login first.
+                </div>
+            <?php
+        }
+            ?>
+            </div>
+            <div class="container">
+                <div class="box box-one">
+                    <img src="views\img\pngwing.com.jpg" />
+                    <h3>Login to Twitter</h3>
+                </div>
+                <div class="box box-two">
+                    <form method="POST" action="?page=loginValidation">
+                        <h6> Please enter your email</h6>
+                        <input type="text" name="email" placeholder="Email" required />
+                        <h6>Please enter your password</h6>
+                        <input type="password" name="password" placeholder="Password" required />
+                        <button type="submit" name="login_btn" class="next-btn">Log in</button>
+                    </form>
+                </div>
+                <p>Don't have an account ? <a href="?page=signup">Sign Up</a></p>
+            </div>
+</body>
+
+</html>
+<?php
+............<?php
+$rexEmail = "/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/";
+$rexPass = "/^.{8,}$/";
+$err = 0;
+
+if(!isset($_POST['email']) && !isset($_POST['password'])) {
+    $err = 1;
+} else if($_POST['email'] == '' && $_POST['password'] == '') {
+    $err = 2;
+} else if($_POST['email'] == '') {
+    $err = 3;
+} else if($_POST['password'] == '') {
+    $err = 4;
+} else if (!preg_match($rexEmail, $_POST['email'])) {
+    $err = 5;
+} else if (!preg_match($rexPass, $_POST['password'])) {
+    $err = 6;
+} else {
+    $email = mysqli_real_escape_string($db, $_POST['email']);
+    $password = mysqli_real_escape_string($db, sha1($_POST['password']));
+
+    $query = "SELECT * FROM users WHERE mail = '$email' AND password = '$password'";
+    $resultData = mysqli_query($db, $query) or die(mysqli_error($db));
+
+    if((mysqli_num_rows($resultData) > 0)) {
+        $userData = $resultData->fetch_assoc();
+        $_SESSION["user_id"] = (int)$userData['id'];
+        header('Location: index.php?page=dashboard');
+    } else {
+        $err = 7;
+    }
+}
+
+if(isset($err) && $err) {
+    header('Location: index.php?page=login&err=' . $err);
+}
+
+?>.........
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="views\css\login.css">
+</head>
+
+<body>
+    <div>
+        <?php
+            if (isset($_GET['err']) && $_GET['err'] == '1') {
+                ?>
+                 <div class="alert alert-danger" role="alert">
+                 All fields are required.
+              </div>
+                <?php
+            } else if(isset($_GET['err']) && $_GET['err'] == '2') {
+                ?>
+                <div class="alert alert-danger" role="alert">
+                All fields are required.
+                </div>
+                <?php
+            } else if(isset($_GET['err']) && $_GET['err'] == '3') {
+                ?>
+                <div class="alert alert-danger" role="alert">
+                Please enter name.
+                </div>
+                <?php
+            } else if(isset($_GET['err']) && $_GET['err'] == '4') {
+                ?>
+                <div class="alert alert-danger" role="alert">
+                Please enter email.
+                </div>
+                <?php
+            } else if(isset($_GET['err']) && $_GET['err'] == '5') {
+                ?>
+                <div class="alert alert-danger" role="alert">
+                Please enter password.
+                <?php
+            } else if(isset($_GET['err']) && $_GET['err'] == '6') {
+                ?>
+                <div class="alert alert-danger" role="alert">
+                Please enter a valid name.
+                </div>
+                <?php
+            } else if(isset($_GET['err']) && $_GET['err'] == '7') {
+                ?>
+                <div class="alert alert-danger" role="alert">
+                Please enter a valid email.
+                </div>
+                <?php
+            } else if(isset($_GET['err']) && $_GET['err'] == '8') {
+                ?>
+                <div class="alert alert-danger" role="alert">
+                Please enter a valid password with at least 8 characters.
+                </div>
+                <?php
+            } else if(isset($_GET['err']) && $_GET['err'] == '9') {
+                ?>
+                <div class="alert alert-danger" role="alert">
+                Your email is already exist.
+                </div>
+                <?php
+            }
+            ?>
+    </div>
+        <div class="container">
+                <div class="box box-one">
+                    <img src="views\img\pngwing.com.jpg" alt="image">
+                    <h3>Create your account</h3>
+                </div>
+                <div class="box box-two">
+                    <form method="POST" action="?page=signupValidation">
+                        <input type="text" name="name" placeholder="Your Name"  />
+                        <input type="text" name="email" placeholder="Your Email" required />
+                        <input type="password" name="password" placeholder="Password" required />
+                        <button type="submit" name="sign_btn" class="next-btn">REGISTER</button>
+                    </form>
+                </div>
+                <p>Have already an account ? <a href="?page=login">login</a></p>
+        </div>
+</body>
+</html>
+
+
+.........
+<?php
+$rexName = "/^[a-zA-Z]+(?:\s?[a-zA-Z]+)*\.?$/";
+$rexEmail = "/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/";
+$rexPass = "/^.{8,}$/";
+$err = 0;
+
+if(!isset($_POST['name']) && !isset($_POST['email']) && !isset($_POST['password'])) {
+    $err = 1;
+} else if($_POST['name'] == '' && $_POST['email'] == '' && $_POST['password'] == '') {
+    $err = 2;
+} else if($_POST['name'] == '') {
+    $err = 3;
+} else if($_POST['email'] == '') {
+    $err = 4;
+} else if($_POST['password'] == '') {
+    $err = 5;
+} else if (!preg_match($rexName, $_POST['name'])) {
+    $err = 6;
+} else if (!preg_match($rexEmail, $_POST['email'])) {
+    $err = 7;
+} else if (!preg_match($rexPass, $_POST['password'])) {
+    $err = 8;
+} else {
+
+    $name = mysqli_real_escape_string($db, $_POST['name']);
+    $email = mysqli_real_escape_string($db, $_POST['email']);
+    $password = mysqli_real_escape_string($db, sha1($_POST['password']));
+
+    $resultData = mysqli_query($db, "SELECT * FROM users WHERE mail = '" . $email . "'") or die(mysqli_error($db));
+    if((mysqli_num_rows($resultData) > 0)) {
+        $err = 9;
+    } else {
+        mysqli_query($db, "INSERT INTO users(username, mail, password) VALUES('" . $name . "', '" . $email . "', '" . $password . "')") or die(mysqli_error($db));
+        $insertId = mysqli_insert_id($db);
+        $_SESSION["user_id"] = (int)$insertId;
+        header('Location: index.php?page=dashboard');
+    }
+
+}
+
+if(isset($err) && $err) {
+    header('Location: index.php?page=signup&err=' . $err);
+}
+
+?>
 .........................................................................indexx.php............................................................................................................
 ...........
 <?php
