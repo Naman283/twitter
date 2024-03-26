@@ -1,3 +1,55 @@
+php
+
+require_once 'model/Login.php';
+
+
+
+//  if(!empty($_SESSION["id"])){
+
+//      header("Location: index.php");
+
+//  }
+
+
+
+$login = new Login();
+
+
+
+if(isset($_POST["submit"])){
+
+
+
+    $result = $login->login($_POST["usernameemail"], $_POST["password"]);
+
+
+
+    if($result == 1){
+
+        $_SESSION["login"] = true;
+
+        $_SESSION["id"] = $login->idUser();
+
+        header("Location: index.php");
+
+    } elseif($result == 2){
+
+        $error = 'Wrong Password';
+
+    } elseif($result == 3){
+
+        $error = 'User Not Registered';
+
+    }
+
+}
+
+
+
+require 'view/loginView.php';
+
+?>
+
 
 ...........indexcontroller.php
 <?php
