@@ -1,3 +1,49 @@
+<?php
+
+session_start();
+
+// Autoload classes
+spl_autoload_register(function ($className) {
+    include_once 'model/' . $className . '.php';
+});
+
+
+
+
+if(isset($_REQUEST['route']) && $_REQUEST['route'])
+{
+    $route = ($_REQUEST['route']);
+} else {
+    $route = 'index';
+}
+
+require 'controller/' . $route . 'Controller.php';
+
+
+// // Define routes
+// $routes = [
+//     '' => 'indexController',
+//     'login' => 'loginController',
+//     'registration' => 'registrationController',
+//     'logout' => 'logoutController'
+// ];
+
+// // Get route from request
+// $route = $_GET['route'] ?? '';
+// if (empty($route)) {
+//     $route = $_POST['route'] ?? '';
+// }
+
+// // Check if route exists, otherwise show 404
+// if (array_key_exists($route, $routes)) {
+//     require 'controller/' . $routes[$route] . '.php';
+// } else {
+//     http_response_code(404);
+//     echo '404 Not Found';
+// }
+?>
+
+
 https://github.com/Eathorne2/PHP-Student-management
 https://github.com/mostafaMahfouz25/crud-mvc-php
 
