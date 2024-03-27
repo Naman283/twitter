@@ -1,3 +1,106 @@
+https://localhost/mvc/index.php/default/login
+
+parse_url
+
+[
+    path => 'index.php/firstcontroller/firstmethod',
+    params => params=first&s=1
+]
+
+
+path index.php remove kr diya 
+
+explode /
+[
+    0 => firstcontroller
+    1 => firstmethod
+]
+
+
+$controller = [0]
+$method =  [1]
+
+
+class Route {
+    public $controller = 'default';
+    public $method = 'index';
+
+    public $flag = 0;
+    function __construct() {
+
+        $url = $_SERVER['REQUEST_URI']
+
+        explode 
+
+        $this->controller = $explode[0];
+        $this->method = explode[1];
+
+        $this->route();
+        
+    }
+
+    function route() {
+        $folder = 'Controller/';
+
+        if(file_exists("$folder/$this->controller.php")) {
+            require_once 
+            $object = new $this->controller();
+            $object->$this->method();
+        } else {
+            echo 'page not found';
+        }
+
+    }
+}
+
+
+required model.php
+
+class default {
+
+    public function index() {
+        $data = [
+            'asdas','asdasd'
+            ]
+
+        require_once "view.php";
+    }
+
+    public function login() {
+        require_once 'view/login.php';
+
+    }      
+    
+    function submitlogin() {
+        $request = $_POST;
+
+        /** validation */
+
+            -----
+        /** validation end */
+
+        /** db connection */
+        $model = new model();
+        if($model->getAuth($request['usrname'],$request['pass'])) {
+            $_SESSION['asdas']
+
+            redirect ('..mvc/dashboard')
+        }
+    }
+
+}
+
+class Model {
+
+    function getAuth($username, $password) {
+        /** query record eixrs */
+
+        return true;
+    }
+}
+
+/mvc/default/submitlogin
+
 You need to manage these things.
 - proper routing
 
