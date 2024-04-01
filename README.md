@@ -1,3 +1,54 @@
+session_start();
+
+require_once 'model/includeFile.php';
+
+class Router {
+
+    public $controller = 'LoginController';
+    public $method = 'index';
+
+    function __construct() 
+    {
+        $url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+
+        // Parse the URL
+        $parseURL = parse_url($url);
+
+        // If the path exists, explode it by '/'
+        $path = isset($parseURL['path']) ? $parseURL['path'] : '';
+        $explode = explode('/', $path);
+        if(isset($explode[3]) && $explode[3]) {
+            $this->controller = $explode[3];
+        }
+        if(isset($explode[4]) && $explode[4]) {
+            $this->method = $explode[4];
+        }
+        
+        $this->route();
+    }
+
+    function route() {
+        $folder = 'controller/';
+        if(file_exists("$folder/$this->controller.php")) {
+            $controller = $this->controller; 
+            $method = $this->method;
+            $object = new $controller();
+            if (method_exists($object, $method)) {
+               $object->$method();
+            } else {
+                require 'view\errors\errorView.php';
+            }
+        } else {
+            require 'view\errors\errorView.php';
+        }
+
+    }
+
+}
+
+
+
+
 DeleteUserController
 <?php
 // delete user controller
