@@ -1,4 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
 
+<modification>
+
+    <name>Menu MOdification</name>
+
+    <version>1</version>
+
+    <author>Naman Chauhan</author>
+
+    <link>http://localhost/opencart/upload/</link>
+
+    <code>modification</code>
+
+    <description>modification</description>
+
+    <file path="admin/controller/common/column_left.php">
+
+        <operation>
+
+            <search><![CDATA[ 			$catalog = array();
+
+ ]]></search>
+
+            <add position="before"><![CDATA[ 
+
+            	if ($this->user->hasPermission('access', 'extension/module/abc')) {
+
+			$data['menus'][] = array(
+
+				'id'       => 'menu-abc',
+
+				'name'	   =>$this->config->get('module_abc_input'),
+
+				'icon'	   => 'fa-cog',
+
+				'href'     => $this->url->link('extension/module/abc', 'user_token=' . $this->session->data['user_token'], true),
+
+				'children' => array()
+
+			);
+
+		}
+
+
+
+		$abc = array();
+
+
+
+			$abc[] = array(
+
+				'name'	   => $this->language->get('text_abc'),
+
+				'href'     => $this->url->link('common/abc', 'user_token=' . $this->session->data['user_token'], true),
+
+				'children' => array()
+
+			);
+
+			$abc[] = array(
+
+				'name'	   => $this->language->get('text_abc'),
+
+				'href'     => $this->url->link('common/abc', 'user_token=' . $this->session->data['user_token'], true),
+
+				'children' => array()
+
+			);
+
+		
+
+		if ($abc) {
+
+			$data['menus'][] = array(
+
+				'id'       => 'menu-abc',
+
+				'icon'	   => 'fa-cog',
+
+
+
+				'name'	   => $this->language->get('text_abc'),
+
+				'href'     => '',
+
+				'children' => $abc
+
+			);
+
+		}
+
+
+
+		
+
+            ]]></add>
+
+        </operation>
+
+    </file>
+
+<file path="admin/language/en-gb/common/column_left.php">
+
+        <operation>
+
+            <search><![CDATA[ $_['text_api']                  = 'API';
+
+ ]]></search>
+
+            <add position="before"><![CDATA[
+
+            $_['text_abc']                  = 'Abc';
+
+
+
+            ]]></add>
+
+        </operation>
+
+    </file>
+
+
+
+</modification>
 
 
 
