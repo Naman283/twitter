@@ -1,3 +1,59 @@
+
+
+
+
+
+
+
+
+<?php
+
+// Heading
+
+$_['heading_title']    = 'Abc';
+
+
+
+// Text
+
+$_['text_extension']   = 'Extensions';
+
+$_['text_success']     = 'Success: You have modified abc module!';
+
+$_['text_edit']        = 'Edit Abc Module';
+
+
+
+// Entry
+
+$_['entry_status']     = 'Status';
+
+$_['entry_input']      = 'Input';
+
+
+
+
+
+
+
+
+
+// Error
+
+$_['error_input']      = 'input required!';
+
+$_['error_input_validation']      = 'input must be alphabets!';
+
+
+
+$_['error_permission'] = 'Warning: You do not have permission to modify abc module!';
+
+
+
+
+
+
+
 <?xml version="1.0" encoding="utf-8"?>
 
 <modification>
